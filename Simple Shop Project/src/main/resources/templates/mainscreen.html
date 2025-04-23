@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nick's Golf Shop</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/styles.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="text-center mb-5">
+            <h1><i class="fas fa-golf-ball me-2"></i>Nick's Golf Shop</h1>
+            <a th:href="@{about}" class="btn btn-primary">
+                <i class="fas fa-info-circle me-1"></i>About Us
+            </a>
+        </header>
+
+        <main>
+            <!-- Parts Section -->
+            <section class="mb-5">
+                <h2><i class="fas fa-tools me-2"></i>Parts Management</h2>
+                <form th:action="@{/mainscreen}" class="mb-4">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-8">
+                            <input type="text" name="partkeyword" id="partkeyword" class="form-control" 
+                                   th:value="${partkeyword}" placeholder="Search parts..." required>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex gap-2">
+                                <input type="submit" value="Search" class="btn btn-primary">
+                                <input type="button" value="Clear" id="btnClearPart" class="btn btn-secondary" 
+                                       onclick="clearSearch()">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="d-flex gap-2 mb-3">
+                    <a th:href="@{/showFormAddInPart}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>Add Inhouse Part
+                    </a>
+                    <a th:href="@{/showFormAddOutPart}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>Add Outsourced Part
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Inventory</th>
+                                <th>Min Inventory</th>
+                                <th>Max Inventory</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="tempPart : ${parts}">
+                                <td th:text="${tempPart.name}"></td>
+                                <td th:text="${tempPart.price}"></td>
+                                <td th:text="${tempPart.inv}"></td>
+                                <td th:text="${tempPart.minInv}"></td>
+                                <td th:text="${tempPart.maxInv}"></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a th:href="@{/showPartFormForUpdate(partID=${tempPart.id})}" 
+                                           class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a th:href="@{/deletepart(partID=${tempPart.id})}" 
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('Are you sure you want to delete this part?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Products Section -->
+            <section>
+                <h2><i class="fas fa-shopping-bag me-2"></i>Products</h2>
+                <form th:action="@{/mainscreen}" class="mb-4">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-8">
+                            <input type="text" name="productkeyword" id="productkeyword" class="form-control" 
+                                   th:value="${productkeyword}" placeholder="Search products..." required>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex gap-2">
+                                <input type="submit" value="Search" class="btn btn-primary">
+                                <input type="button" value="Clear" id="btnClearProduct" class="btn btn-secondary" 
+                                       onclick="clearSearch()">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="mb-3">
+                    <a th:href="@{/showFormAddProduct}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>Add Product
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Inventory</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="tempProduct : ${products}">
+                                <td th:text="${tempProduct.name}"></td>
+                                <td th:text="${tempProduct.price}"></td>
+                                <td th:text="${tempProduct.inv}"></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a th:href="@{/showProductFormForUpdate(productID=${tempProduct.id})}" 
+                                           class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a th:href="@{/deleteproduct(productID=${tempProduct.id})}" 
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('Are you sure you want to delete this product?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        <a th:href="@{/buyProduct(productID=${tempProduct.id})}" 
+                                           class="btn btn-sm btn-success">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        function clearSearch() {
+            window.location = "[[@{/}]]";
+        }
+    </script>
+</body>
+</html>
